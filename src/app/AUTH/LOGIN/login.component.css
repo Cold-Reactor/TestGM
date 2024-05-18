@@ -1,0 +1,83 @@
+.fullscreen {
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    margin:0px;
+    height:100%;
+    width:100%;
+    position: absolute;
+    justify-content: center;
+  }
+  
+.container{
+    /*border:1px solid white;*/
+    width: 310px;
+    height: 350px;
+    position: absolute;
+    top:50%;
+    left:50%;
+    transform: translate(-50%, -50%);
+    justify-content: center;
+}
+
+.frontbox{
+    background-color: white;
+    border-radius: 20px;
+    height: 100%;
+    position: absolute;
+    background-color: rgba(255, 255, 255, .15);
+    backdrop-filter: blur(8px);
+}
+
+.textcontent{
+    color:white;
+    margin-top:65px;
+    margin-left: 12%;
+}
+
+ /* front box content*/
+ .login{
+    padding: 20px;
+    text-align: center;
+}
+
+.login h1{
+    color: #35B729;
+}
+
+.inputbox{
+    margin-top:30px; 
+}
+
+.login input{
+    display: block;
+    width: 100%;
+    height: 40px;
+    background-color: #f2f2f2;
+    border: none;
+    margin-bottom:20px;
+    font-size: 15px;
+}
+
+.login button{
+    background-color: #35B729;
+    border: none;
+    color:white;
+    font-size: 19px;
+    font-weight: 600;
+    box-sizing: content-box;
+    padding:10px;
+    border-radius: 10px;
+    width: 80px;
+    position: absolute;
+    right:30px;
+    bottom: 30px;
+    cursor: pointer;
+}
+
+  /* Fade In & Out*/
+.login p {
+    cursor: pointer;
+    color:#404040;
+    font-size:15px;
+}

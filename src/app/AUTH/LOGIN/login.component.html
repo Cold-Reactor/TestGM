@@ -1,0 +1,17 @@
+<div class="fullscreen" [style]="{backgroundImage: 'url(./assets/fondo.png)'} ">
+    <div class="container" >     
+          <div class="frontbox">
+            <div class="login">
+                  <img style="width: 48%;" src="assets/logo.jpg" alt="GMTransport®"/>
+              <div class="inputbox">
+                <input pInputText [(ngModel)]="user" style="margin-bottom:30px; border-radius: 15px;" name="user" type="text" size="8" id="user" placeholder="  USER">
+                <input pInputText [(ngModel)]="pass" (keyup.enter)="onLogin()" style="border-radius: 15px;" type="password" size="8" id="pass" placeholder="  PASSWORD">
+              </div>
+              <button pButton (click)="onLogin()" label="LOG IN"></button>
+            </div>
+          </div>
+    </div>
+  
+    <p-toast></p-toast>
+    
+  </div>
