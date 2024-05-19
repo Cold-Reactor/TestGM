@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { LOGINComponent } from './AUTH/LOGIN/login.component';
+import { InicioComponent } from './MAIN/inicio/inicio.component';
 
 export const routes: Routes = [
     { 
@@ -7,5 +8,10 @@ export const routes: Routes = [
         title: 'Iniciar sesión',
         pathMatch: 'full',
         component: LOGINComponent
+    },
+    { 
+        path: 'Inicio',
+        pathMatch: 'full',
+        component: InicioComponent
     }
 ];

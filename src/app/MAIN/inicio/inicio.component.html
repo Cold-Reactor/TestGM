@@ -1,0 +1,17 @@
+<div id="menuBar" class="shadow-3 flex align-items-center grid">
+    
+    <div class="flex justify-content-start col">
+    </div>
+    
+    <div id="logoContainer" class="flex justify-content-center col">
+        <picture class="flex justify-content-center">
+            <source media="(max-width: 600px)" srcset="assets/logo2.PNG">
+            <img src="assets/logo.jpg" id="logoBar" alt="GMTransport" />
+        </picture>
+    </div>
+
+    <div class="flex align-content-center align-items-center justify-content-end col">
+        <p-button id="nameLog" label="{{loginNombre}}" (onClick)="onLogout()" icon="pi pi-sign-out" iconPos="right"
+            styleClass="p-button-raised p-button-rounded p-button-text" title="Cerrar sesión"></p-button>
+    </div>
+</div>
