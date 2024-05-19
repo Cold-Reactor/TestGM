@@ -4,14 +4,14 @@
             <div class="login">
                   <img style="width: 48%;" src="assets/logo.jpg" alt="GMTransport®"/>
               <div class="inputbox">
-                <input pInputText [(ngModel)]="user" style="margin-bottom:30px; border-radius: 15px;" name="user" type="text" size="8" id="user" placeholder="  USER">
-                <input pInputText [(ngModel)]="pass" (keyup.enter)="onLogin()" style="border-radius: 15px;" type="password" size="8" id="pass" placeholder="  PASSWORD">
+                <input pInputText [(ngModel)]="user" style="margin-bottom:30px; border-radius: 15px;" name="user" type="text" size="8" id="user" placeholder="USUARIO">
+                <input pInputText [(ngModel)]="pass" (keyup.enter)="onLogin()" style="border-radius: 15px;" type="password" size="8" id="pass" placeholder="CONTRASEÑA">
               </div>
-              <button pButton (click)="onLogin()" label="LOG IN"></button>
+              <button pButton pRipple (click)="onLogin()" label="LOG IN"></button>
             </div>
           </div>
     </div>
   
     <p-toast></p-toast>
     
-  </div>
+</div>

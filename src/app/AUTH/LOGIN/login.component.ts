@@ -20,8 +20,10 @@ export class LOGINComponent {
 
   constructor(private authService: AuthService, private router: Router, private messageService: MessageService){}
   
-  onLogin():boolean{
-    if(this.user && this.pass){
+  onLogin():void{
+
+    //! USUARIO Y CONTRASEÑA DE PRUEBA
+    if(this.user=='admin' && this.pass=='123456789'){
       // this.authService.login(this.user, this.pass).subscribe(data =>{
       //   if(data){
       //     this.router.navigate(['./Inicio']);
@@ -32,9 +34,11 @@ export class LOGINComponent {
       // }
       // )
 
-      //! USUARIO Y CONTRASEÑA DE PRUEBA
-      return this.user=='admin' && this.pass=='abcde123';
+      this.router.navigate(['./Inicio']);
     }
-    else{ return false}
+    else{
+      this.messageService.add({ severity: 'error', summary:'Usuario y/o contraseña inválidos.' , detail: 'Intente de nuevo.' })
+      this.user = this.pass = '';
+    }
   }
 }

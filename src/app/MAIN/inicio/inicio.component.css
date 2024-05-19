@@ -1,0 +1,33 @@
+#menuBar{
+    width: 100%;
+    height: auto;
+    padding: 5px 10px 5px 10px;
+    margin: 0;
+    position:sticky;
+    top:0;
+    z-index: 3;
+    background: rgba(255, 255, 255, 0.7);
+    backdrop-filter: blur(5px);
+    /* transition: padding 1s;
+    -webkit-transition: padding 1s;
+    -moz-transition: padding 1s;
+    -ms-transition: padding 1s;
+    -o-transition: padding 1s; */
+}
+
+#logoBar{
+    width:60%;
+    height: 100%;
+    transition: width 1s;
+    -webkit-transition: width 1s;
+    -moz-transition: width 1s;
+    -ms-transition: width 1s;
+    -o-transition: width 1s;
+}
+
+:host ::ng-deep .p-chip.custom-chip {
+    background: inherit;
+    border-radius: 16px;
+    font-weight: bold;
+    font-size: medium;
+}
