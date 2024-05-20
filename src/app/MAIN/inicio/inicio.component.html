@@ -1,17 +1,341 @@
-<div id="menuBar" class="shadow-3 flex align-items-center grid">
-    
-    <div class="flex justify-content-start col">
-    </div>
-    
-    <div id="logoContainer" class="flex justify-content-center col">
-        <picture class="flex justify-content-center">
-            <source media="(max-width: 600px)" srcset="assets/logo2.PNG">
-            <img src="assets/logo.jpg" id="logoBar" alt="GMTransport" />
-        </picture>
-    </div>
+<div class="flex justify-content-center align-items-center" style=" transform: scale(0.9);">
+    <div class="lg:w-11 shadow-5 p-4 " style="width: 1500px; text-align: center; align-items: center;">
+        <div class="shadow-1" style="width: 50%; margin: auto;">
+            <p-tabMenu [model]="items" [activeItem]="activeItem"  [scrollable]="true">
+                <ng-template pTemplate="item" let-item>
+                    <a class="p-menuitem-link flex justify-content-between align-items-center p-3">
+                        <span style="margin-right: 5px;">{{ item.label }}</span>
+                        <i [class]="item.icon" style="font-size: 25px"></i>
+                    </a>
+                </ng-template>
+            </p-tabMenu>
+            @switch (option) {
+                @case (1) {
+                    <p-table [value]="_observable$ | async" [tableStyle]="{ 'min-width': '100%' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Distancia</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product>
+                            <tr>
+                                <td>{{ product.idRuta}}</td>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.kilometros}}km</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                }
+                @case (2) {
+                    @for (caseta of _observable$|async; track caseta.idCaseta) {
+                        <div class="flex justify-content-center align-items-center p-3>">
+                            <h3 style="text-align: center;">{{caseta.name}}</h3>
+                        </div>
 
-    <div class="flex align-content-center align-items-center justify-content-end col">
-        <p-button id="nameLog" label="{{loginNombre}}" (onClick)="onLogout()" icon="pi pi-sign-out" iconPos="right"
-            styleClass="p-button-raised p-button-rounded p-button-text" title="Cerrar sesión"></p-button>
+                        <p-table [value]="_transporte$|async " [tableStyle]="{ 'min-width': '100%' }">
+                            <ng-template pTemplate="header">
+                                <tr>
+                                </tr>
+                            </ng-template>
+                            <ng-template pTemplate="body" let-product>
+                                <tr>
+                                    <!-- @for (item of items; track $index) {
+                                        <td>{{ product.idCombustible | catalogo:"combustible" | async}}</td>
+                                    } -->
+                                </tr>
+                            </ng-template>
+                        </p-table>
+                    }
+
+                }
+                @case (3) {
+                    <p-table [value]="_observable$ | async" [tableStyle]="{ 'min-width': '100%' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Id</th>
+                                <th>Nombre</th>
+                                <th>Combustible</th>
+                                <th>Ejes</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product>
+                            <tr>
+                                <td>{{ product.idTransporte }}</td>
+                                <td>{{ product.name }}</td>
+                                <td>{{ product.idCombustible | catalogo:"combustible" | async}}</td>
+                                <td>{{ product.ejes}}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                }
+                @case (4) {
+                    <p-table [value]="_observable$ | async" [tableStyle]="{ 'min-width': '100%' }">
+                        <ng-template pTemplate="header">
+                            <tr>
+                                <th>Id</th>
+                                <th>Tipo</th>
+                                <th>Precio</th>
+                            </tr>
+                        </ng-template>
+                        <ng-template pTemplate="body" let-product>
+                            <tr>
+                                <td>{{ product.idCombustible }}</td>
+                                <td>{{ product.tipo }}</td>
+                                <td>{{ product.precio | currency }}</td>
+                            </tr>
+                        </ng-template>
+                    </p-table>
+                }
+            }
+            <!-- <router-outlet></router-outlet> -->
+            
+        </div>
+
+        <div *ngIf="presupuesto == false " class="flex align-content-center align-items-center justify-content-end col">
+            <p-button id="nameLog" label="Generar Presupuesto"  icon="pi pi-sign-out" (onClick)="calculo = false ; presupuesto = true" iconPos="right"
+                styleClass="p-button-raised p-button-rounded p-button-text"></p-button>
+        </div>
+
+        <div *ngIf="presupuesto" class="shadow-1 mt-5" style="width: 50%; margin: auto;">
+        
+            <div class="col-12 flex-wrap flex row-gap-3">
+                <div class="col-12 flex column-gap-1 mt-2">
+                    <div [ngClass]="{'col-4':viaje.tipo?true:false,'col-6':viaje.tipo?false:true}" class="p-float-label flex-none p-0">
+                        <span class="p-float-label">
+                            <p-dropdown [autoDisplayFirst]="false" [(ngModel)]="viaje.tipo" [options]="tipoViaje" styleClass="flex" optionValue="id" optionLabel="name" appendTo="body" ></p-dropdown>
+                            <label>Tipo de Viaje</label>
+                        </span>
+                    </div>
+    
+                    <div [ngClass]="{'col-4':viaje.tipo?true:false,'col-6':viaje.tipo?false:true}" class="p-float-label flex-none  p-0 ">
+                        <span class="p-float-label">
+                            <p-dropdown [autoDisplayFirst]="false" [(ngModel)]="viajeRuta.ida" [options]="(_ruta$ | async)!" styleClass="flex" optionValue="idRuta" optionLabel="name" appendTo="body" ></p-dropdown>
+                            <label>Ruta De Ida</label>
+                        </span>
+                    </div>
+                    <div  *ngIf="viaje.tipo" class="col-4 flex-none  p-0">
+                        <span class="p-float-label">
+                            <p-dropdown [autoDisplayFirst]="false" [(ngModel)]="viajeRuta.regreso" [options]="(_ruta$ | async)!" styleClass="flex" optionValue="idRuta" optionLabel="name" appendTo="body" ></p-dropdown>
+                            <label>Ruta de Regreso</label>
+                        </span>
+                    </div>
+                </div>
+                <div *ngIf="transporte" class="col-12 column-gap-1">
+                    @for (ruta of _ruta$|async; track ruta.idRuta) {
+                        
+                        @if (ruta.idRuta == viajeRuta.ida) {
+                            <div class="flex justify-content-center align-items-center p-3>">
+                                <h3 style="text-align: center;">{{ruta.idRuta |catalogo:'ruta'|async}}</h3>
+                            </div>
+                            <p-table [value]="_rutaCaseta$ | async" [tableStyle]="{ 'min-width': '100%' }">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Peajes</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-product>
+                                    @if (ruta.idRuta == product.idRuta) {
+                                        <tr>
+                                            <td>{{ product.idCaseta |catalogo:'caseta'|async}}</td>
+                                            <td>{{ product.idCaseta |catalogo:'tarifa':transporte |async |currency}}</td>
+                                        </tr>
+                                    }
+                                </ng-template>
+                            </p-table>
+                        }@else{
+                            @if (ruta.idRuta == viajeRuta.regreso) {
+                                <div class="flex justify-content-center align-items-center p-3>">
+                                    <h3 style="text-align: center;">{{ruta.idRuta |catalogo:'ruta'|async}}</h3>
+                                </div>
+                                <p-table [value]="_rutaCaseta$ | async" [tableStyle]="{ 'min-width': '100%' }">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>Peajes</th>
+                                            <th>Precio</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-product>
+                                        @if (ruta.idRuta == product.idRuta) {
+
+                                            <tr>
+                                                <td>{{ product.idCaseta |catalogo:'caseta'|async}}</td>
+                                                <td>{{ product.idCaseta |catalogo:'tarifa':transporte|async  |currency}}</td>
+                                            </tr>
+                                        }
+                                    </ng-template>
+                                </p-table>
+                            }
+                        }
+                    
+                    }
+
+                </div>
+                <div class="col-12 flex column-gap-1">
+                    <div class="col-4 p-float-label flex-none p-0 ">
+                        <p-floatLabel>
+                            <p-dropdown [autoDisplayFirst]="false" [(ngModel)]="transporte" [options]="(_transporte$ | async)!" styleClass="flex" optionValue="idTransporte" optionLabel="name" appendTo="body"  [style]="{minWidth:'180px'}" ></p-dropdown>
+                            <label>Transporte</label>
+                        </p-floatLabel>
+                    </div>
+                    <div class="col-4 p-float-label flex-none p-0 ">
+                        <p-floatLabel>
+                            <p-calendar [(ngModel)]="fechas[0]" [showTime]="true" [hourFormat]="'12'" styleClass="flex" appendTo="body" dateFormat="yy-mm-dd" (onSelect)="cambiarFormatoFechaPartida()"  [style]="{minWidth:'100px'}"></p-calendar>
+                            <label>Fecha Salida</label>
+                        </p-floatLabel>
+                    </div>
+                    <div  class="col-4 flex-none p-0 ">
+                        <p-floatLabel>
+                            <p-calendar [disabled]="!fechas[0]" [(ngModel)]="fechas[1]"[showTime]="true" [hourFormat]="'12'" styleClass="flex" appendTo="body" dateFormat="yy-mm-dd"  (onSelect)="cambiarFormatoFechaRegreso()" [style]="{minWidth:'100px'}"></p-calendar>
+                            <label>Fecha Regreso</label>
+                        </p-floatLabel>
+                    </div>
+
+                </div>
+                <div class="col-12 flex justify-content-center">
+                    <p-floatLabel>
+                    
+                        <p-inputNumber 
+                            [(ngModel)]="viaje.pasajeros" 
+                            [showButtons]="true" 
+                            min="1"
+                            buttonLayout="horizontal" 
+                            decrementButtonClass="p-button-secondary"
+                            incrementButtonClass="p-button-secondary" 
+                            incrementButtonIcon="pi pi-plus" 
+                            decrementButtonIcon="pi pi-minus"
+                        />
+                        <label for="number-input">Numero de Pasajeros</label>
+
+                    </p-floatLabel>
+
+                    <!-- <p-floatLabel>
+                        <p-inputNumber inputId="integeronly" [(ngModel)]="viaje.pasajeros" />
+                        <label for="number-input"># Pasajeros</label>
+                    </p-floatLabel> -->
+
+                    <!-- <div class="col-12  p-0 ">
+                        <p-button id="nameLog" label="Calcular Presupuesto"  icon="pi pi-sign-out" iconPos="right"
+                        styleClass="p-button-raised p-button-rounded p-button-text" ></p-button>
+                    </div> -->
+                </div>
+            </div>
+        </div>
+
+        <div *ngIf="calculo == false " class="flex align-content-center align-items-center justify-content-end col">
+            <p-button *ngIf="viajeRuta.ida && transporte && viaje.fechaPartida && viaje.fechaRegreso && viaje.pasajeros" (onClick)="presupuesto = false; calculo = true" id="nameLog" label="Calcular Presupuesto"  icon="pi pi-sign-out" iconPos="right"
+            styleClass="p-button-raised p-button-rounded p-button-text" ></p-button>
+        </div>
+
+        <div *ngIf="calculo" class="shadow-1" style="width: 65%; margin: auto; border: 2px dashed black;">
+            <div class="col-12 flex-wrap flex row-gap-3 mb-3">
+                <div class="col-4 flex-none p-0 ">
+                Tipo de Viaje: <b>{{tipoViaje[viaje.tipo].name}}</b>
+                </div>
+                <div class="col-4 flex-none p-0 ">
+                Ruta de Ida: <b>{{viajeRuta.ida!|catalogo:'ruta'|async}}</b>
+                </div>
+                <div class="col-4 flex-none p-0 ">
+                Ruta de Regreso: <b>{{viajeRuta.regreso!|catalogo:'ruta'|async}}</b>
+                </div>
+            </div>
+            <div class="col-12 flex-wrap flex row-gap-3 mb-3">
+                <div class="col-4 flex-none p-0 ">
+                Tipo de Vehiculo: <b>{{transporte |catalogo:'transporteName'| async}}</b>
+                </div>
+                <div class="col-4 flex-none p-0 ">
+                Fecha de Salida: <b>{{this.viaje.fechaPartida | date:'medium':'UTC'+offset}}</b>
+                </div>
+                <div class="col-4 flex-none p-0 ">
+                Fecha de Regreso: <b>{{this.viaje.fechaRegreso | date:'medium':'UTC'+offset}}</b>
+                </div>
+            </div>
+            <div class="col-12 flex justify-content-center mb-3">
+                <div class="col-4 flex-none p-0 ">
+                Cantidad de Pasajeros: <b>{{viaje.pasajeros }}</b>
+                </div>
+                <div class="col-4 flex-none p-0 ">
+                Kilomentros a recorrer: <b>{{(viajeRuta.ida! |catalogo:'rutakm'|async) + (viajeRuta.regreso! |catalogo:'rutakm'|async)}}</b>
+                </div>
+                <div class="col-4 flex-none p-0 ">
+                Costo de Litro Combustible: <b>{{(((transporte | catalogo:'transporteCombustible'|async) | catalogo:'combustiblePrecio')|async)|currency}}</b>
+                </div>
+
+            </div>
+            <div *ngIf="transporte" class="flex  justify-content-center align-items-center col-12 column-gap-5">
+                @for (ruta of _ruta$|async; track ruta.idRuta) {
+                    
+                    @if (ruta.idRuta == viajeRuta.ida) {
+                        <div class="flex flex-column ">
+                            <b style="text-align: center;">{{viajeRuta.ida == viajeRuta.regreso?'Ruta de Ida y Regreso:':'Ruta de Ida:'}}</b><br>
+                            <b style="text-align: center; margin-bottom:10px;">{{ruta.idRuta |catalogo:'ruta'|async}}</b>
+                            <p-table [value]="_rutaCaseta$ | async" [tableStyle]="{ 'min-width': '100%' }">
+                                <ng-template pTemplate="header">
+                                    <tr>
+                                        <th>Peajes</th>
+                                        <th>Precio</th>
+                                    </tr>
+                                </ng-template>
+                                <ng-template pTemplate="body" let-product>
+                                    @if (ruta.idRuta == product.idRuta) { 
+                                        <tr>
+                                            <td>{{ product.idCaseta |catalogo:'caseta'|async}}</td>
+                                            <td>{{ product.idCaseta |catalogo:'tarifa':transporte |async |currency}}</td>
+                                        </tr>
+                                    }
+                                </ng-template>
+                            </p-table>
+                        </div>
+
+                    }@else{
+                        @if (ruta.idRuta == viajeRuta.regreso) {
+                            <div class="flex flex-column">
+                                <b style="text-align: center;">Ruta de Regreso:</b><br>
+                                <b style="text-align: center; margin-bottom:10px;">{{ruta.idRuta |catalogo:'ruta'|async}}</b>
+                                <p-table [value]="_rutaCaseta$ | async" [tableStyle]="{ 'min-width': '100%' }">
+                                    <ng-template pTemplate="header">
+                                        <tr>
+                                            <th>Peajes</th>
+                                            <th>Precio</th>
+                                        </tr>
+                                    </ng-template>
+                                    <ng-template pTemplate="body" let-product>
+                                        @if (ruta.idRuta == product.idRuta) {
+
+                                            <tr>
+                                                <td>{{ product.idCaseta |catalogo:'caseta'|async}}</td>
+                                                <td>{{ product.idCaseta |catalogo:'tarifa':transporte|async  |currency}}</td>
+                                            </tr>
+                                        }
+                                    </ng-template>
+                                </p-table>
+                            </div>
+                        }
+                    }
+                
+                }
+
+            </div>
+            <div class="col-12 flex-wrap flex row-gap-3 mb-3">
+                <div class="col-4 flex-none p-0 ">
+                Costo total de Combustible: <b>{{((((viajeRuta.ida! |catalogo:'rutakm'|async) + (viajeRuta.regreso! |catalogo:'rutakm'|async))/3)*((transporte | catalogo:'transporteCombustible'|async) | catalogo:'combustiblePrecio' |async))|currency}}</b>
+                </div>
+                <div class="col-4 flex-none p-0 ">
+                Costo total de Peajes <b>{{""}}</b>
+                </div>
+                <div class="col-4 flex-none p-0 ">
+                Costo total de Viaticos: <b>{{viatico |currency}}</b>
+                </div>
+            </div>
+            <div class="col-12 flex justify-content-center mb-3">
+                <div class="col-4 flex-none p-0 ">
+                Costo del Viaje: <b>{{((((viajeRuta.ida! |catalogo:'rutakm'|async) + (viajeRuta.regreso! |catalogo:'rutakm'|async))/3)*((transporte | catalogo:'transporteCombustible'|async) | catalogo:'combustiblePrecio' |async)) + viatico |currency}}</b>
+                </div>
+            </div>
+        </div>
+
+
     </div>
 </div>

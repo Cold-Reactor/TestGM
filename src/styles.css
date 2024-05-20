@@ -1,0 +1,7 @@
+@import "primeicons/primeicons.css";
+
+body{
+    /*$CAMBIAlLOSESTILOSDEFINIDOSENTODALAAPLICACION*/font-family: var(--font-family);
+    margin: 0;
+    padding: 0;
+}

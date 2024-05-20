@@ -8,12 +8,12 @@ import { AuthService } from '../services/auth.service';
 @Component({
   selector: 'app-login',
   standalone: true,
-  providers: [CommonModule, RouterModule, MessageService],
-  imports: [PrimeNGModule],
+  providers: [MessageService],
+  imports: [CommonModule, RouterModule,PrimeNGModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
-export class LOGINComponent {
+export class LoginComponent {
 
   user:string = '';
   pass:string = '';
@@ -22,19 +22,22 @@ export class LOGINComponent {
   
   onLogin():void{
 
-    //! USUARIO Y CONTRASEÑA DE PRUEBA
-    if(this.user=='admin' && this.pass=='123456789'){
-      // this.authService.login(this.user, this.pass).subscribe(data =>{
-      //   if(data){
-      //     this.router.navigate(['./Inicio']);
-      //   }
-      // },err =>{
-      //   this.messageService.add({ severity: 'error', detail: 'Usuario o contraseña incorrectos.' })
-      //     this.user = this.pass = '';
-      // }
-      // )
+    // if(this.user && this.pass){
+    //   this.authService.login(this.user, this.pass).subscribe({
+    //     next:(data)=>{
+    //       console.log(data);
+    //       this.router.navigate(['./Inicio']);
+    //     },
+    //     error:() =>{
+    //       this.messageService.add({ severity: 'error', detail: 'Usuario o contraseña incorrectos.' })
+    //       this.user = this.pass = '';  
+    //     }
+    //   })
+    // }
 
-      this.router.navigate(['./Inicio']);
+    // //! USUARIO Y CONTRASEÑA DE PRUEBA
+    if(this.user=='admin' && this.pass=='123'){
+      this.router.navigate(['./inicio/catalogos']);
     }
     else{
       this.messageService.add({ severity: 'error', summary:'Usuario y/o contraseña inválidos.' , detail: 'Intente de nuevo.' })

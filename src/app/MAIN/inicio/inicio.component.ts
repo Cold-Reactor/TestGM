@@ -1,73 +1,66 @@
 import { Component } from '@angular/core';
 import { PrimeNGModule } from '../../prime-ng/prime-ng.module';
 import { Router, RouterModule } from '@angular/router';
+import { MenuComponent } from '../../COMMONS/menu/menu.component';
+import { MenuItem } from 'primeng/api';
+import { CatalogoService } from '../services/catalogo.service';
+import { Observable } from 'rxjs';
+import { Combustible, Transporte, Viaje, ViajeRuta } from '../interfaces/catalogos';
+import { CommonModule } from '@angular/common';
+import { CatalogoPipe } from '../../COMMONS/pipes/catalogo.pipe';
+
 
 @Component({
-  selector: 'app-inicio',
-  standalone: true,
-  providers:[RouterModule],
-  imports: [PrimeNGModule],
-  templateUrl: './inicio.component.html',
-  styleUrl: './inicio.component.css'
+    selector: 'app-inicio',
+    standalone: true,
+    providers: [RouterModule],
+    templateUrl: './inicio.component.html',
+    styleUrl: './inicio.component.css',
+    imports: [CommonModule, PrimeNGModule, MenuComponent, CatalogoPipe]
 })
 export class InicioComponent {
-  //$Variables para obtener algunos elementos del sitio y modificarlos en el código
-  verticalNav: any;
-  menuBar: any;
-  logoBar: any;
-  overlay: any;
+  items: MenuItem[] | undefined;//$ OBJETOS DEL MENÚ QUE CONTIENEN ENLACES A OTRAS PÁGINAS
+  activeItem: MenuItem | undefined;//$ ES LA PÁGINA ACTUAL
+  option:number = 1;//$ OPCIONES DEL MENÚ
+  _observable$: Observable<any> = new Observable();
+  _transporte$: Observable<any> = new Observable();
+  _rutaCaseta$: Observable<any> = new Observable();
+  _ruta$: Observable<any> = new Observable();
+  presupuesto:boolean=false;
+  calculo:boolean=false;
+  fechas:string[] = [];
+  viaje: Viaje = {idViaje:0,fechaPartida:'',fechaRegreso:'',tipo:0,viaticos:0,pasajeros:1};
+  viajeRuta:ViajeRuta= {idViajeRuta:0,idViaje:0,idRuta:0,ida:0,regreso:0};
+  transporte!:number
+  offset:number;
+  viatico:number = 0;
 
-  //$ Variable para guardar el nombre del usuario que hizo login y mostrarlo en la barra horizontal
-  loginNombre: string = 'USER';
-
-  constructor(private router: Router) {
+  tipoViaje:{name:string,id:number}[] = [{name:'Una Direccion',id:0},{name:'Redondo',id:1}];
+  constructor(private router: Router,private catalogoService: CatalogoService) {
+    this._transporte$ = this.catalogoService.httpGetTransporte();
+    this._ruta$ = this.catalogoService.httpGetRuta();
+    this._rutaCaseta$ = this.catalogoService.httpGetRuta_caseta();
+    this._observable$ = this.catalogoService.httpGetRuta()
+    this.offset = (new Date().getTimezoneOffset())
   }
 
-  ngOnInit(): void{
-    //$ Se obtiene la columna que contiene el menú y se oculta por defecto.
-    this.verticalNav = document.getElementById('verticalNav');
-    if(this.verticalNav != null){
-      this.verticalNav.style.display = 'none';
-  
-      // //$ Se obtiene la barra horizontal.
-      // this.menuBar = document.getElementById('menuBar');
-  
-      //$ Se obtiene el logo de la barra.
-      this.logoBar = document.getElementById('logoBar');
-  
-      //$ Se obtiene la capa sobrepuesta.
-      this.overlay = document.getElementById('overlay');
-  
-      //$ Se obtiene el nivel de scroll
-      if(this.logoBar){window.onscroll = this.scrollFunction;}
+  ngOnInit() {
+    this.items = [
+      { label: 'Rutas', icon: 'pi pi-calendar', command: () =>{this.option=1;this._observable$ = this.catalogoService.httpGetRuta()}},
+      { label: 'Casetas', icon: 'pi pi-fw pi-chart-bar',command: () =>{this.option=2;this._observable$ = this.catalogoService.httpGetCaseta()}},
+      { label: 'Unidades', icon: 'pi pi-fw pi-check', command: () =>{this.option=3;this._observable$ = this.catalogoService.httpGetTransporte()}},
+      { label: 'Precio Combustible', icon: 'pi pi-fw pi-users',command: () =>{this.option=4;this._observable$ = this.catalogoService.httpGetCombustible()}}    
+    ];
+  }
+
+  cambiarFormatoFechaPartida(){//* AGREGA LA FECHASOLICITUD AL OBJETO DE TIEMPO EXTRA
+    this.viaje.fechaPartida =  new Date(this.fechas[0]).toISOString().slice(0, -1);
+    console.log(this.viaje.fechaPartida);
+
+  }
+  cambiarFormatoFechaRegreso(){
+      this.viaje.fechaRegreso = new Date(this.fechas[1]).toISOString().slice(0, -1);
+      this.viatico = (new Date(this.fechas[1]).getTime() - new Date(this.fechas[0]).getTime()) / (1000 * 60 * 60 * 24) * (375*6)
+      console.log(this.viaje.fechaRegreso);
     }
-  }
-
-  scrollFunction() {//* Función para controlar cuándo se va a modificar la barra del sitio.
-    
-    if (window.scrollY > 80) {//* Como se va a mostrar cuando esté abajo
-
-      //$ El ancho del logo se ajusta a 60% del div donde está ubicado
-      if(this.logoBar)
-      this.logoBar.style.width = "30%";
-      
-      //$ El padding de la barra horizontal se reduce para acomodar mejor los botones
-      // this.menuBar.style.padding = "0px 10px 0px 10px";
-      
-    } else {//* Como se va a mostrar cuando esté arriba
-
-      //$ El ancho del logo se ajusta a 100% del div donde está ubicado
-      if(this.logoBar)
-      this.logoBar.style.width = "60%";
-      
-      //$ El padding de la barra horizontal vuelve a su valor original
-      // this.menuBar.style.padding = "5px 10px 5px 10px";
-
-    }
-  }
-
-  onLogout(){//* AQUÍ SE CIERRA SESIÓN
-    // this.authService.logout()
-    this.router.navigate(['']);
-  }
 }
