@@ -12,7 +12,7 @@ export class AuthService {
 
   constructor(private http: HttpClient) { }
 
-  // login(user:string, pass:string):Observable<{id:number}>{//* AL INICIAR SESIÓN SE BUSCA AL USUARIO Y SI EXISTE, SE CONSIGUE EL TOKEN Y SE MANDA A LA PÁGINA DE INICIO
+  // login(user:string, pass:string):Observable<{id:number}>{//* AL INICIAR SESIÓN SE BUSCA AL USUARIO Y SI EXISTE  Y SE MANDA A LA PÁGINA DE INICIO
   //   return this.http.post<{id:number}>(`${this.apiURL}/Usuarios/login`,{name: user, pass: pass})
   // }
 

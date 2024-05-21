@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../../environments/environment.development';
 import { Observable, of } from 'rxjs';
-import { Caseta, Combustible, Ruta, RutaCaseta, Tarifa, TarifasTransporte, Transporte, Viaje, ViajeRuta } from '../interfaces/catalogos';
+import { Caseta, Combustible, Ruta, RutaCaseta, Tarifa, Transporte, Viaje, ViajeRuta } from '../interfaces/catalogos';
 
 @Injectable({
   providedIn: 'root'
@@ -26,6 +26,14 @@ export class CatalogoService {
   httpDeleteCombustible(id:number){
     this.http.delete(`${this.apiURL}/Combustibles/${id}`)
   }
+  //*----------
+  httpGetKilometrosPrecio(rutaI: number, rutaR: number, transporte: number): Observable<number> {
+    return this.http.get<number>(`${this.apiURL}/Combustibles/KilometrosPrecio/${rutaI}/${rutaR}/${transporte}`);
+  }
+  httpGetCombustiblePrecio(transporte: number): Observable<number> {
+    return this.http.get<number>(`${this.apiURL}/Combustibles/Precio/${transporte}`);
+  }
+  //*----------
 
   //$ CRUD TRANSPORTE
   httpGetTransporte():Observable<Transporte[]>{
@@ -61,11 +69,10 @@ export class CatalogoService {
     this.http.delete(`${this.apiURL}/Tarifas/${id}`)
   }
   //*----------
-  httpGetTarifaCasetaID(idCaseta:number):Observable<TarifasTransporte>{
-    return this.http.get<TarifasTransporte>(`${this.apiURL}/Tarifas/Caseta/${idCaseta}`)
+  httpGetCombustibleTotal(rutaI: number, rutaR: string, transporte: number): Observable<number> {
+    return this.http.get<number>(`${this.apiURL}/Tarifas/CombustibleTotal/${rutaI}/${rutaR}/${transporte}`)
   }
   //*----------
-
 
   //$ CRUD CASETA
   httpGetCaseta():Observable<Caseta[]>{
@@ -117,6 +124,11 @@ export class CatalogoService {
   httpDeleteRuta(id:number){
     this.http.delete(`${this.apiURL}/Rutas/${id}`)
   }
+  //*----------
+  httpGetRutaKm(rutaI: number, rutaR: number): Observable<number> {
+    return this.http.get<number>(`${this.apiURL}/Rutas/Km/${rutaI}/${rutaR}`);
+  }
+  //*----------
 
   //$ CRUD VIAJE_RUTA
   httpGetViaje_ruta():Observable<ViajeRuta[]>{

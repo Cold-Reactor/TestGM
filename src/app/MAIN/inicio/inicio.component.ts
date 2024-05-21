@@ -24,20 +24,29 @@ export class InicioComponent {
   option:number = 1;//$ OPCIONES DEL MENÚ
   _observable$: Observable<any> = new Observable();
   _transporte$: Observable<any> = new Observable();
+  _tarifa$: Observable<any> = new Observable();
   _rutaCaseta$: Observable<any> = new Observable();
   _ruta$: Observable<any> = new Observable();
-  presupuesto:boolean=false;
-  calculo:boolean=false;
-  fechas:string[] = [];
+  _combustibleTotal$: Observable<any> = new Observable();
+  _kilometrosTotal$: Observable<any> = new Observable();
+  _kilometros$: Observable<any> = new Observable();
+  _CombustibleLitro$: Observable<any> = new Observable();
+  fechas:Date[] = [];
   viaje: Viaje = {idViaje:0,fechaPartida:'',fechaRegreso:'',tipo:0,viaticos:0,pasajeros:1};
   viajeRuta:ViajeRuta= {idViajeRuta:0,idViaje:0,idRuta:0,ida:0,regreso:0};
+  tipoViaje:{name:string,id:number}[] = [{name:'Una Direccion',id:0},{name:'Redondo',id:1}];
   transporte!:number
   offset:number;
   viatico:number = 0;
+  presupuesto:boolean=false;
+  calculo:boolean=false;
 
-  tipoViaje:{name:string,id:number}[] = [{name:'Una Direccion',id:0},{name:'Redondo',id:1}];
+  viajeRutaIda: ViajeRuta = {idViajeRuta:0,idViaje:0,idRuta:0,ida:0,regreso:0};
+  viajeRutaRegreso: ViajeRuta = {idViajeRuta:0,idViaje:0,idRuta:0,ida:0,regreso:0};
+  
   constructor(private router: Router,private catalogoService: CatalogoService) {
     this._transporte$ = this.catalogoService.httpGetTransporte();
+    this._tarifa$ = this.catalogoService.httpGetTarifa();
     this._ruta$ = this.catalogoService.httpGetRuta();
     this._rutaCaseta$ = this.catalogoService.httpGetRuta_caseta();
     this._observable$ = this.catalogoService.httpGetRuta()
@@ -46,21 +55,33 @@ export class InicioComponent {
 
   ngOnInit() {
     this.items = [
-      { label: 'Rutas', icon: 'pi pi-calendar', command: () =>{this.option=1;this._observable$ = this.catalogoService.httpGetRuta()}},
-      { label: 'Casetas', icon: 'pi pi-fw pi-chart-bar',command: () =>{this.option=2;this._observable$ = this.catalogoService.httpGetCaseta()}},
-      { label: 'Unidades', icon: 'pi pi-fw pi-check', command: () =>{this.option=3;this._observable$ = this.catalogoService.httpGetTransporte()}},
-      { label: 'Precio Combustible', icon: 'pi pi-fw pi-users',command: () =>{this.option=4;this._observable$ = this.catalogoService.httpGetCombustible()}}    
+      { label: 'Rutas', icon: 'pi pi-map', command: () =>{this.option=1;this._observable$ = this.catalogoService.httpGetRuta()}},
+      { label: 'Casetas', icon: 'pi pi-fw pi-building-columns',command: () =>{this.option=2;this._observable$ = this.catalogoService.httpGetCaseta()}},
+      { label: 'Unidades', icon: 'pi pi-fw pi-car', command: () =>{this.option=3;this._observable$ = this.catalogoService.httpGetTransporte()}},
+      { label: 'Precio Combustible', icon: 'pi pi-fw pi-dollar',command: () =>{this.option=4;this._observable$ = this.catalogoService.httpGetCombustible()}}    
     ];
   }
 
-  cambiarFormatoFechaPartida(){//* AGREGA LA FECHASOLICITUD AL OBJETO DE TIEMPO EXTRA
-    this.viaje.fechaPartida =  new Date(this.fechas[0]).toISOString().slice(0, -1);
-    console.log(this.viaje.fechaPartida);
-
+  cambiarFormatoFechaPartida(){//$ AGREGA LA FECHASPARTIDA AL OBJETO DE VIAJE
+    this.viaje.fechaPartida = new Date(this.fechas[0].getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, -1);
   }
-  cambiarFormatoFechaRegreso(){
-      this.viaje.fechaRegreso = new Date(this.fechas[1]).toISOString().slice(0, -1);
-      this.viatico = (new Date(this.fechas[1]).getTime() - new Date(this.fechas[0]).getTime()) / (1000 * 60 * 60 * 24) * (375*6)
-      console.log(this.viaje.fechaRegreso);
-    }
+  cambiarFormatoFechaRegreso(){//$ AGREGA LA FECHASREGRESO AL OBJETO DE VIAJE
+      this.viaje.fechaRegreso = new Date(this.fechas[1].getTime() - (new Date().getTimezoneOffset() * 60000)).toISOString().slice(0, -1);
+      this.viatico = ((this.fechas[1].getTime() - this.fechas[0].getTime()) / (24 * 60 * 60 * 1000)) * (375*6)
+  }
+
+  calculador(){ //$ FUNCION QUE CALCULA EL PRESUPUESTO DE UN VIAJE
+    this._combustibleTotal$ = this.catalogoService.httpGetCombustibleTotal(this.viajeRuta.ida!,this.viajeRuta.regreso!.toString(),this.transporte)
+    this._kilometrosTotal$ = this.catalogoService.httpGetKilometrosPrecio(this.viajeRuta.ida!,this.viajeRuta.regreso!,this.transporte)
+    this._CombustibleLitro$ = this.catalogoService.httpGetCombustiblePrecio(this.transporte)
+    this._kilometros$ = this.catalogoService.httpGetRutaKm(this.viajeRuta.ida!,this.viajeRuta.regreso!)
+  }
+
+  onPrint() {//$ FUNCIÓN QUE SE LLAMA AL HACER CLICK EN EL BOTÓN DE IMPRIMIR
+    const printContents = document.getElementById('imprimir')!.innerHTML;
+    document.body.innerHTML = printContents;
+    window.print();
+    this.router.navigate([`./dashboard/3/gafetes`])
+    window.location.reload();
+  }
 }

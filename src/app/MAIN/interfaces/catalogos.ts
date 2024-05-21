@@ -50,14 +50,3 @@ export interface Usuario {
     name: string;
     pass: string;
 }
-
-
-
-export interface TransporteTarifa{
-    idTransporte:number,
-    precio:number
-}
-export interface TarifasTransporte{
-    idCaseta:number;
-    tarifasTransporte:TransporteTarifa[];
-}

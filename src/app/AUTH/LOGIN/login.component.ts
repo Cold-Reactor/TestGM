@@ -36,7 +36,7 @@ export class LoginComponent {
     // }
 
     // //! USUARIO Y CONTRASEÑA DE PRUEBA
-    if(this.user=='admin' && this.pass=='123'){
+    if(this.user=='Admin' && this.pass=='PassGM'){
       this.router.navigate(['./inicio/catalogos']);
     }
     else{
