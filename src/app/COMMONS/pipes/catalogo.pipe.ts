@@ -16,8 +16,6 @@ export class CatalogoPipe implements PipeTransform {
     switch (id) {
       case "combustible":
         return this.catalogoService.httpGetCombustibleID(data).pipe(map((combustible)=>combustible.tipo));    
-      case "combustiblePrecio":
-        return this.catalogoService.httpGetCombustibleID(data).pipe(map((combustible)=>combustible.precio));    
       case "transporte":
         return this.catalogoService.httpGetTransporteID(data).pipe(map((transporte)=>transporte.name));
       case "ruta":

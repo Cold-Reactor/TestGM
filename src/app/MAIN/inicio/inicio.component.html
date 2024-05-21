@@ -45,7 +45,11 @@
                                 </tr>
                             </ng-template>
                             <ng-template pTemplate="body" let-product>
-                                <td>{{product.idCombustible | catalogo:"combustiblePrecio" | async | currency}}</td>
+                                @for (transporte of _tarifa$|async; track $index) {
+                                    @if (caseta.idCaseta == transporte.idCaseta && product.idTransporte == transporte.idTransporte) {
+                                        <th>{{transporte.precio | currency}}</th>   
+                                    }
+                                }
                             </ng-template>
                         </p-table>
                     }
