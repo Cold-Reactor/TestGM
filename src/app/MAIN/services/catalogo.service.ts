@@ -149,19 +149,19 @@ export class CatalogoService {
 
   //$ CRUD VIAJE
   httpGetViaje():Observable<Viaje[]>{
-    return this.http.get<Viaje[]>(`${this.apiURL}/Viaje`)
+    return this.http.get<Viaje[]>(`${this.apiURL}/Viajes`)
   }
   httpGetViajeID(id:number):Observable<Viaje>{
-    return this.http.get<Viaje>(`${this.apiURL}/Viaje/${id}`)
+    return this.http.get<Viaje>(`${this.apiURL}/Viajes/${id}`)
   }
-  httpPostViaje(viaje:Viaje){
-    this.http.post(`${this.apiURL}/Viaje`,viaje)
+  httpPostViaje(viaje:Viaje):Observable<any>{
+    return this.http.post(`${this.apiURL}/Viajes`,viaje)
   }
   httpPutViaje(viaje:Viaje){
-    this.http.put(`${this.apiURL}/Viaje/${viaje.idViaje}`,viaje)
+    this.http.put(`${this.apiURL}/Viajes/${viaje.idViaje}`,viaje)
   }
   httpDeleteViaje(id:number){
-    this.http.delete(`${this.apiURL}/Viaje/${id}`)
+    this.http.delete(`${this.apiURL}/Viajes/${id}`)
   }
 
 }
